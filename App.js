@@ -1,76 +1,59 @@
-import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
+import AddItem from './components/AddItem.js'
+import Index from './components/Lista/Index.js'
+import ModalItem from './components/Modal.js'
 import { StatusBar } from 'expo-status-bar';
+import { useState } from 'react';
 
 export default function App() {
-  return (
-    <View style={styles.screen}>
-      <View style={styles.inputContainer}>
-        <TextInput placeholder='Item de lista...' style={styles.input} />
-        <Button title='ADD' />
-      </View>
-      <View>
-        
-        <View style={styles.containerItem}>
-          <Text style={{color:'white'}}>Item de lista</Text>
-          <Button title='X' />
-        </View>
-        <View style={styles.containerItem}>
-          <Text style={{color:'white'}}>Item de lista</Text>
-          <Button title='X' />
-        </View>
-        <View style={styles.containerItem}>
-          <Text style={{color:'white'}}>Item de lista</Text>
-          <Button title='X' />
-        </View>
-        <View style={styles.containerItem}>
-          <Text style={{color:'white'}}>Item de lista</Text>
-          <Button title='X' />
-        </View>
 
-      </View>
-      <View style={styles.containerModal} >
-        <Text style={{color:'white'}} >Quieres eliminar este item?</Text>
-        <Button title='Remove'></Button>
-      </View>
+  const [ itemsList , setItemsList ] = useState([])
+  const [ itemText, setItemText ] = useState('')
+  const [ modalVisible , setModalVisible ] = useState(false)
+  const [ itemSelected , setItemSelected ] = useState({})
+
+  const onHandlerChangeText = (e) => setItemText(e)
+
+  const addItem = () =>{
+    const nuevoObj = {id: Math.random().toString(), value: itemText, state: false}
+    setItemsList( [ ...itemsList, nuevoObj])
+    setItemText('')
+  }
+
+  const onHandlerModal = (id) => {
+    setItemSelected(itemsList.filter(item => item.id === id)[0])
+    setModalVisible(!modalVisible)
+  }
+
+  const closeModal = () => {
+    setItemSelected({})
+    setModalVisible(!modalVisible)
+  }
+
+  const onHandlerDelete = () => {
+    setItemsList(currentItems => currentItems.filter(item => item.id !== itemSelected.id))
+    setItemSelected({})
+    setModalVisible(!modalVisible)
+  }
+
+  return (
+    
+    <View style={styles.screen}>
+
+    <ModalItem Delete={onHandlerDelete} Close={closeModal} Visible={modalVisible} Item={itemSelected} />
+
+    <AddItem Add={addItem} ChangeText={onHandlerChangeText} Text={itemText} />
+
+    <Index Lista={itemsList} OpenModal={onHandlerModal} />
+
     </View>
+    
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   screen: {
     padding: 50,
   },
-  inputContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  input: {
-    borderBottomColor: 'black',
-    borderBottomWidth: 1,
-    width: 200,
-  },
-  containerItem:{
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 5,
-    marginTop: 10,
-    backgroundColor: 'grey'
-  },
-  containerModal: {
-    justifyContent:'space-evenly',
-    alignItems: 'center',
-    margin: 10,
-    width: 200,
-    height: 200,
-    backgroundColor: 'grey',
-  }
 });
