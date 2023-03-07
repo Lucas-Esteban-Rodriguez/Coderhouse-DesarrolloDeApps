@@ -1,10 +1,13 @@
 import { Button, FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useEffect, useState } from "react";
 
+import Colors from "../../constants/colors";
+
 const Index = (props) => {
 
     const { Lista , OpenModal } = props
     const [ listaNueva , setListaNueva ] = useState([])
+    
 
     const changeStateItem = (id) =>{
       const nuevaLista = [...listaNueva]
@@ -25,7 +28,7 @@ const Index = (props) => {
             data={listaNueva}
             renderItem = { data => (
             <View style={styles.container}>
-              <TouchableOpacity onPress={OpenModal.bind(this, data.item.id)} style={data.item.state?styles.itemCompleted:styles.itemUncompleted} ><Text style={{color:'white'}}>{data.item.value}</Text></TouchableOpacity>
+              <TouchableOpacity onPress={OpenModal.bind(this, data.item.id)} style={data.item.state?styles.itemCompleted:styles.itemUncompleted} ><Text style={{color:'white', fontFamily: 'roboto-black'}}>{data.item.value}</Text></TouchableOpacity>
               <Button onPress={() => changeStateItem(data.item.id)} title="✔" />
             </View>
               )}
@@ -41,7 +44,7 @@ const styles = StyleSheet.create({
       marginBottom: 10,
     },
     itemUncompleted:{
-      backgroundColor:'#1d3557',
+      backgroundColor: Colors.primary,
       flex: 1,
       padding: 7.5,
       borderRadius: 7,

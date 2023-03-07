@@ -17,6 +17,16 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "fonts": [
+      {
+        "family": "roboto-black",
+        "fonts":[
+          {
+            "asset": "assets/fonts/Roboto-Black.ttf"
+          }
+        ]
+      }
+    ],
     "ios": {
       "supportsTablet": true
     },

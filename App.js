@@ -1,59 +1,34 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { useEffect, useState } from 'react';
 
-import AddItem from './components/AddItem.js'
-import Index from './components/Lista/Index.js'
-import ModalItem from './components/Modal.js'
-import { StatusBar } from 'expo-status-bar';
-import { useState } from 'react';
+import AppLoading from 'expo-app-loading';
+import PasswordGenerator from './components/PasswordGenerator.js';
+import { StyleSheet } from 'react-native';
+import ToDoList from './components/ToDoList.js'
+import { useFonts } from 'expo-font';
 
 export default function App() {
 
-  const [ itemsList , setItemsList ] = useState([])
-  const [ itemText, setItemText ] = useState('')
-  const [ modalVisible , setModalVisible ] = useState(false)
-  const [ itemSelected , setItemSelected ] = useState({})
-
-  const onHandlerChangeText = (e) => setItemText(e)
-
-  const addItem = () =>{
-    const nuevoObj = {id: Math.random().toString(), value: itemText, state: false}
-    setItemsList( [ ...itemsList, nuevoObj])
-    setItemText('')
+  
+  const [ toDoList, setToDoList ] = useState(true)
+  
+  function changeToPasswordGenerator() {
+    setToDoList(!toDoList);
   }
-
-  const onHandlerModal = (id) => {
-    setItemSelected(itemsList.filter(item => item.id === id)[0])
-    setModalVisible(!modalVisible)
-  }
-
-  const closeModal = () => {
-    setItemSelected({})
-    setModalVisible(!modalVisible)
-  }
-
-  const onHandlerDelete = () => {
-    setItemsList(currentItems => currentItems.filter(item => item.id !== itemSelected.id))
-    setItemSelected({})
-    setModalVisible(!modalVisible)
-  }
+  
+  const [loaded] = useFonts({
+    'roboto-black': require('./assets/fonts/Roboto-Black.ttf'),
+  });
+  if (!loaded) return <AppLoading/>
 
   return (
     
-    <View style={styles.screen}>
+    toDoList
+    ?
+    <ToDoList switchScreen={changeToPasswordGenerator} />
+    :
+    <PasswordGenerator switchScreen={changeToPasswordGenerator} />
 
-    <ModalItem Delete={onHandlerDelete} Close={closeModal} Visible={modalVisible} Item={itemSelected} />
-
-    <AddItem Add={addItem} ChangeText={onHandlerChangeText} Text={itemText} />
-
-    <Index Lista={itemsList} OpenModal={onHandlerModal} />
-
-    </View>
-    
   );
 }
 
-const styles = StyleSheet.create({
-  screen: {
-    padding: 50,
-  },
-});
+const styles = StyleSheet.create({});
